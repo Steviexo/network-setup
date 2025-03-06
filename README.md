@@ -1,8 +1,3 @@
-# GitHub-Einführung
-
-Neu bei GitHub? Keine Sorge! Schauen Sie sich unsere [GitHub-Einführung](https://github.com/steviexo/github-intro/blob/main/intro.md) an, um die Grundlagen zu lernen.
-
-
 # 📖 Network-setup – Netzwerk & Routing Dokumentation
 
 Willkommen im Repository **network-setup**! Dieses Repository dient als zentrale Wissenssammlung für meine Router- und Netzwerk-Konfigurationen. Hier dokumentiere ich meine Erfahrungen und Best Practices zur Einrichtung und Optimierung meines Netzwerks.
@@ -44,10 +39,20 @@ router-configs/
 ### 🔹 **Router & Netzwerk-Setup**
 
 - **[MikroTik VPN](docs/mikrotik-vpn.md)**: VPN zum Streamen einrichten
+
+  - [Detaillierte Konfiguration](docs/configuration.md)
+  - [Externer Zugriff](docs/external-access.md)
+  - [Troubleshooting](docs/troubleshooting.md)
+  - [Security Best Practices](docs/security.md)
+
 - **[Firewall-Regeln](docs/firewall-rules.md)**: Sicherheitsregeln & Schutzmaßnahmen
+
 - **[Fritzbox Bridge Mode](docs/fritzbox-bridge.md)**: Nutzung der Fritzbox als Modem
+
 - **[Netzwerk-Segmentierung](docs/network-segmentation.md)**: VLANs & Subnetting
+
 - **[Externer Zugriff](docs/external-access.md)**: VPN-Nutzung auf verschiedenen Geräten
+
 - **[Absicherung & Security](docs/security.md)**: Best Practices für eine sichere Konfiguration
 
 ### 🚧 **In Arbeit / Geplante Inhalte**
@@ -106,4 +111,3 @@ Falls du Änderungen oder Verbesserungen beisteuern möchtest, lies die [CONTRIB
 ---
 
 ✍ **Letzte Aktualisierung:**
-
