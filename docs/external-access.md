@@ -1,11 +1,11 @@
 # 🌍 Externer Zugriff auf das MikroTik VPN
 
-Diese Anleitung beschreibt, wie externe Nutzer (außerhalb deines Heimnetzwerks) auf dein MikroTik WireGuard VPN zugreifen können, um Streaming-Dienste oder andere Inhalte über deine VPN-Verbindung zu nutzen.
+Diese Anleitung beschreibt, wie externe Nutzer:innen (außerhalb deines Heimnetzwerks) auf dein MikroTik WireGuard VPN zugreifen können, um Streaming-Dienste oder andere Inhalte über deine VPN-Verbindung zu nutzen.
 
 ---
 
-## **📌 Möglichkeiten für externe Nutzer**
-Da viele Streaming-Geräte (z. B. PS4, Smart-TVs) keinen eigenen VPN-Client haben, gibt es mehrere Wege, externe Nutzer in dein VPN einzubinden:
+## **📌 Möglichkeiten für externe Nutzer:innen**
+Da viele Streaming-Geräte (z. B. PS4, Smart-TVs) keinen eigenen VPN-Client haben, gibt es mehrere Wege, externe Nutzer:innen in dein VPN einzubinden:
 
 | Gerät | Methode |
 |---------|----------------|
@@ -22,13 +22,13 @@ Diese Methode eignet sich für Geräte mit **integriertem VPN-Client**, wie **Wi
 
 ### **1.1 Neuen WireGuard-Peer auf dem MikroTik anlegen**
 
-1. Öffne ein Terminal oder WebFig und füge den neuen Nutzer hinzu:
+1. Öffne ein Terminal oder WebFig und füge neue Nutzer:innen hinzu:
    ```sh
    /interface wireguard peers add allowed-address=10.10.10.3/32 interface=wireguard1 public-key="CLIENT-PUBLIC-KEY"
    ```
    - **Ersetze `CLIENT-PUBLIC-KEY`** mit dem öffentlichen Schlüssel des externen Geräts.
 
-2. Erstelle eine **WireGuard-Konfigurationsdatei** für den Nutzer:
+2. Erstelle eine **WireGuard-Konfigurationsdatei** für Nutzer:innen :
    ```ini
    [Interface]
    PrivateKey = CLIENT-PRIVATE-KEY
@@ -44,11 +44,11 @@ Diese Methode eignet sich für Geräte mit **integriertem VPN-Client**, wie **Wi
    - **`DEINE-ÖFFENTLICHE-IP`** ist die WAN-IP deiner FritzBox (oder eine DynDNS-Adresse).
    - **`SERVER-PUBLIC-KEY`** ist der öffentliche Schlüssel deines MikroTik.
 
-3. **Den Nutzer die Konfiguration importieren lassen**
+3. **Nutzer:innen die Konfiguration importieren lassen**
    - **Windows/macOS/Linux** → WireGuard-Client installieren und Datei importieren
    - **iOS/Android** → WireGuard-App nutzen
 
-✅ **Nach der Verbindung sollte der externe Nutzer mit deiner VPN-IP online sein!**
+✅ **Nach der Verbindung sollten die externen Nutzer:innen mit deiner VPN-IP online sein!**
 
 ---
 
@@ -84,7 +84,7 @@ Da PS4s und Smart-TVs **keinen eigenen VPN-Client** haben, muss ein **VPN-Router
 
 ---
 
-## **🛠️ 3️⃣ Alternative: SmartDNS für externe Nutzer**
+## **🛠️ 3️⃣ Alternative: SmartDNS für externe Nutzer:innen**
 Falls ein **VPN-Router nicht möglich** ist, kann ein **SmartDNS-Ansatz** genutzt werden. Hierbei wird nur der DNS-Traffic über dein Heimnetz geleitet.
 
 ### **📌 Einrichtung von SmartDNS auf MikroTik**
@@ -98,7 +98,7 @@ Falls ein **VPN-Router nicht möglich** ist, kann ein **SmartDNS-Ansatz** genutz
    /ip firewall nat add chain=dstnat protocol=udp dst-port=53 action=dst-nat to-addresses=192.168.10.1 to-ports=53
    ```
 
-3. **Externer Nutzer muss folgende DNS-Server auf der PS4 oder Smart-TV eintragen:**
+3. **Externer Nutzer:innen muss folgende DNS-Server auf der PS4 oder Smart-TV eintragen:**
    - **Primärer DNS:** `DEINE-ÖFFENTLICHE-IP`
    - **Sekundärer DNS:** `8.8.8.8`
 
@@ -121,7 +121,7 @@ Falls der externe Zugriff nicht funktioniert, prüfe:
   ```
 
 ✅ **Verbindungsstatus von WireGuard:**
-- Prüfe, ob externe Nutzer verbunden sind:
+- Prüfe, ob externe Nutzer:innen verbunden sind:
   ```sh
   /interface wireguard peers print
   ```
@@ -130,8 +130,8 @@ Falls der externe Zugriff nicht funktioniert, prüfe:
   /log print where message~"wireguard"
   ```
 
-✅ **Externer Nutzer testet die Verbindung:**
-- Öffne auf dem Gerät des Nutzers `https://whatismyipaddress.com/` und prüfe, ob die **VPN-IP** angezeigt wird.
+✅ **Externer Nutzer:innen testet die Verbindung:**
+- Öffne auf dem Gerät des Nutzer:innens `https://whatismyipaddress.com/` und prüfe, ob die **VPN-IP** angezeigt wird.
 
 ---
 
