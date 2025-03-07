@@ -14,7 +14,7 @@ Dieses Dokument beschreibt Best Practices und Konfigurationsmaßnahmen, um dein 
   ```
 
 ### ✅ **2️⃣ Zugang nur für bekannte IPs erlauben**
-- Falls externe Nutzer eine **statische IP** haben, beschränke den Zugriff:
+- Falls externe Nutzer:innen eine **statische IP** haben, beschränke den Zugriff:
   ```sh
   /ip firewall filter add chain=input action=accept src-address=EXTERNE-IP protocol=udp dst-port=13231
   ```
@@ -37,7 +37,7 @@ Dieses Dokument beschreibt Best Practices und Konfigurationsmaßnahmen, um dein 
 
 ## **🛡️ Firewall-Schutz für das VPN**
 ### ✅ **4️⃣ Nur VPN-Clients Zugriff auf das lokale Netzwerk geben**
-- Erlaube nur VPN-Nutzer, die sich verbinden dürfen:
+- Erlaube nur VPN-Nutzer:innen, die sich verbinden dürfen:
   ```sh
   /ip firewall filter add chain=forward action=accept src-address=10.10.10.0/24 dst-address=192.168.88.0/24
   ```
@@ -52,7 +52,7 @@ Dieses Dokument beschreibt Best Practices und Konfigurationsmaßnahmen, um dein 
   /ip firewall filter add chain=input action=accept src-address=192.168.88.0/24 protocol=tcp dst-port=22
   /ip firewall filter add chain=input action=drop protocol=tcp dst-port=22
   ```
-- Blockiere unnötige Dienste für externe Nutzer:
+- Blockiere unnötige Dienste für externe Nutzer:innen :
   ```sh
   /ip service disable telnet
   /ip service disable ftp
@@ -66,12 +66,12 @@ Dieses Dokument beschreibt Best Practices und Konfigurationsmaßnahmen, um dein 
   ```sh
   /ip dns set servers=8.8.8.8,1.1.1.1 allow-remote-requests=yes
   ```
-- Falls externe VPN-Nutzer ebenfalls diesen DNS-Server nutzen sollen:
+- Falls externe VPN-Nutzer:innen ebenfalls diesen DNS-Server nutzen sollen:
   ```sh
   /ip firewall nat add chain=dstnat protocol=udp dst-port=53 action=redirect to-ports=53
   ```
 
-### ✅ **7️⃣ DNS-Leaks für externe VPN-Nutzer verhindern**
+### ✅ **7️⃣ DNS-Leaks für externe VPN-Nutzer:innen verhindern**
 - Setze in der WireGuard-Konfiguration der Clients folgende DNS-Einstellung:
   ```ini
   [Interface]
