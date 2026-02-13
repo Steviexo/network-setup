@@ -34,6 +34,15 @@ router-configs/
 │   ├── vpn-topology.png        # Schema der VPN-Verbindung
 │   ├── firewall-rules-diagram.png # Visualisierung der Firewall-Regeln
 └── README.md                   # Haupt-README des Repos
+
+docs/
+│
+├── 00-overview/            # Gesamtüberblick über das HomeLab, Topologie, Zielsetzung.
+├── 01-architecture/        # Grundlegende Designentscheidungen und Begründungen.
+├── 02-services/            # Dokumentation einzelner Systeme (z. B. MikroTik, FRITZ!Box, VPN).
+├── 03-operations/          # Betriebsrelevante Themen wie Monitoring, Updates, Backups.
+├── 04-incidents/           # Konkrete Vorfälle mit Root-Cause-Analyse
+└── 05-troubleshooting/     # Allgemeine Debugging-Methoden und systematische Analyseansätze.
 ```
 
 ### 🔹 **Router & Netzwerk-Setup**
@@ -109,5 +118,3 @@ Falls du Änderungen oder Verbesserungen beisteuern möchtest, lies die [CONTRIB
 - [Projekt-Template](https://github.com/steviexo/project-template)
 
 ---
-
-✍ **Letzte Aktualisierung:**
