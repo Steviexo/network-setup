@@ -92,3 +92,60 @@ flowchart TD
 ```
 
 Dieses erweiterte Diagramm kann genutzt werden, sobald weitere Netzsegmente oder Services hinzukommen.
+
+---
+
+# Management- & Control-Plane Diagramm
+
+Dieses Diagramm zeigt, wie administrative Zugriffe und Kontrollverbindungen im Netzwerk verlaufen.
+
+```mermaid
+flowchart LR
+
+    ADMIN["Admin-Client (Ubuntu Workstation)"]
+
+    MIKROTIK_MGMT["MikroTik
+Management:
+- RouterOS Web
+- Winbox
+- SSH"]
+
+    FRITZBOX_MGMT["FRITZ!Box Webinterface
+http://192.168.178.1"]
+
+    DOCKER_MGMT["Docker Host (192.168.88.10)
+- Portainer
+- NetBox
+- NPM
+- paperless-ngx"]
+
+    DNS_FLOW["DNS-Flow:
+Clients → MikroTik (Cache) → Upstream DNS"]
+
+    %% Management Zugriffe
+    ADMIN -->|"HTTPS / SSH"| MIKROTIK_MGMT
+    ADMIN -->|"HTTPS"| DOCKER_MGMT
+    ADMIN -->|"HTTPS"| FRITZBOX_MGMT
+
+    %% DNS Kontrollfluss
+    ADMIN -.->|"DNS Query"| DNS_FLOW
+```
+
+## Trennung Data-Plane vs Control-Plane
+
+**Data-Plane:**
+
+* Client-Traffic ins Internet
+* NAT auf dem MikroTik
+* Routing über FRITZ!Box zum ISP
+
+**Control-Plane:**
+
+* Administrative Zugriffe auf Router, Firewall, Docker-Services
+* DNS-Resolver-Funktion auf dem MikroTik
+* Konfigurationsänderungen
+
+Diese Trennung hilft bei Troubleshooting:
+
+* Internet weg? → Data-Plane prüfen
+* Webinterface nicht erreichbar? → Control-Plane prüfen
