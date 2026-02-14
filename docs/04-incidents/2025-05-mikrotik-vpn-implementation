@@ -1,0 +1,104 @@
+# Incident: MikroTik VPN – Konzeptfehler bei Implementierung (PS4-Anbindung)
+
+Datum: 2025 (geschätzt)
+Status: Gelöst
+
+---
+
+## TL;DR
+
+Während der Einrichtung eines VPN auf dem MikroTik sollte eine PS4 über das VPN angebunden werden. Das Gerät konnte jedoch kein „VPN-WLAN“ finden. Ursache war ein konzeptionelles Missverständnis: Ein VPN stellt kein eigenes WLAN bereit, sondern ist ein Tunnel über eine bestehende Internetverbindung. Die PS4 unterstützt keinen nativen VPN-Client.
+
+---
+
+## Kontext
+
+Ziel war es, eine PlayStation 4 über ein VPN mit dem Heimnetzwerk zu verbinden.
+
+Gedankliches Modell:
+PS4 → „VPN-WLAN“ → MikroTik → internes LAN
+
+Technische Realität:
+VPN = verschlüsselter Tunnel über bestehende IP-Verbindung
+
+---
+
+## Symptome
+
+* VPN auf dem MikroTik eingerichtet
+* PS4 suchte nach WLAN-Netzwerken
+* Kein „VPN-WLAN“ sichtbar
+* Keine VPN-Client-Konfigurationsmöglichkeit auf der PS4
+
+---
+
+## Erste Hypothesen
+
+* Fehlerhafte WLAN-Konfiguration
+* Falsche Bridge-Zuordnung
+* Fehlende SSID
+* Firewall-Blockade
+
+---
+
+## Untersuchung (Schritt-für-Schritt)
+
+1. WLAN-Interfaces geprüft
+2. Bridges und Interface-Zuordnungen überprüft
+3. Analyse, ob VPN Layer-2-Funktionalität bereitstellt
+4. Recherche zur VPN-Unterstützung auf der PS4
+
+Ergebnis: Die PS4 besitzt keinen nativen VPN-Client.
+
+---
+
+## Technische Artefakte
+
+Beispielhafte Prüfungen:
+
+```
+/interface print
+/interface bridge print
+/ip pool print
+```
+
+Rechercheergebnis:
+
+* Keine Unterstützung für MikroTik-VPN-Protokolle auf der PS4
+
+---
+
+## Root Cause
+
+Konzeptionelles Missverständnis über die Funktionsweise eines VPN. Ein VPN ist kein Access-Layer-Mechanismus und erzeugt keine eigene WLAN-SSID.
+
+---
+
+## Lösung
+
+* Architektur neu bewertet
+* Verständnis für Layer-Trennung vertieft
+* Alternative Ansätze geprüft (z. B. gesamtes Netz über VPN-Gateway routen)
+
+---
+
+## Lessons Learned
+
+* VPN arbeitet auf Layer 3/4, nicht auf Layer 2
+* Endgeräte benötigen VPN-Client oder vorgeschaltetes Gateway
+* Vor Implementierung: Gerätefähigkeiten prüfen
+* Architekturdiagramme helfen Denkfehler zu vermeiden
+
+---
+
+## Präventive Maßnahmen
+
+* Vor neuen Implementierungen Architektur skizzieren
+* Gerätespezifikationen dokumentieren
+* Trennung zwischen Access-Layer (WLAN) und Transport-Layer (VPN) klar halten
+
+---
+
+## Status
+
+☑ Gelöst
