@@ -14,7 +14,13 @@ Dieses Repository wächst mit meinen Erfahrungen und ist eine zentrale Anlaufste
 
 ```
 router-configs/
-├── docs/                      # Dokumentation zu diesem Repository
+├── docs/                   # Dokumentation zu diesem Repository
+├── 00-overview/            # Gesamtüberblick über das HomeLab, Topologie, Zielsetzung.
+├── 01-architecture/        # Grundlegende Designentscheidungen und Begründungen.
+├── 02-services/            # Dokumentation einzelner Systeme (z. B. MikroTik, FRITZ!Box, VPN).
+├── 03-operations/          # Betriebsrelevante Themen wie Monitoring, Updates, Backups.
+├── 04-incidents/           # Konkrete Vorfälle mit Root-Cause-Analyse
+└── 05-troubleshooting/     # Allgemeine Debugging-Methoden und systematische Analyseansätze.
 │   ├── README.md              # Einführung & Übersicht
 │   ├── mikrotik-vpn.md        # MikroTik VPN: Einrichtung & Grundkonfiguration
 │   ├── firewall-rules.md      # Sicherheitsmaßnahmen & Firewall-Regeln
@@ -34,15 +40,6 @@ router-configs/
 │   ├── vpn-topology.png        # Schema der VPN-Verbindung
 │   ├── firewall-rules-diagram.png # Visualisierung der Firewall-Regeln
 └── README.md                   # Haupt-README des Repos
-
-docs/
-│
-├── 00-overview/            # Gesamtüberblick über das HomeLab, Topologie, Zielsetzung.
-├── 01-architecture/        # Grundlegende Designentscheidungen und Begründungen.
-├── 02-services/            # Dokumentation einzelner Systeme (z. B. MikroTik, FRITZ!Box, VPN).
-├── 03-operations/          # Betriebsrelevante Themen wie Monitoring, Updates, Backups.
-├── 04-incidents/           # Konkrete Vorfälle mit Root-Cause-Analyse
-└── 05-troubleshooting/     # Allgemeine Debugging-Methoden und systematische Analyseansätze.
 ```
 
 ### 🔹 **Router & Netzwerk-Setup**
