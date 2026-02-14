@@ -1,6 +1,8 @@
 # 📖 Network-setup – Netzwerk & Routing Dokumentation
 
-Willkommen im Repository **network-setup**! Dieses Repository dient als zentrale Wissenssammlung für meine Router- und Netzwerk-Konfigurationen. Hier dokumentiere ich meine Erfahrungen und Best Practices zur Einrichtung und Optimierung meines Netzwerks.
+![Docs](https://img.shields.io/badge/docs-structured-blue)
+![Status](https://img.shields.io/badge/status-active-green)
+![Focus](https://img.shields.io/badge/focus-networking%20%7C%20linux%20admin-orange)
 
 ## 📝 Ziel dieses Repositories
 
@@ -10,108 +12,124 @@ Willkommen im Repository **network-setup**! Dieses Repository dient als zentrale
 
 Dieses Repository wächst mit meinen Erfahrungen und ist eine zentrale Anlaufstelle für Netzwerk- und Router-Themen.
 
-## 📂 Verzeichnisstruktur & Unterthemen
+## 📂 Struktur des Repositories
 
 ```
-router-configs/
-├── docs/                   # Dokumentation zu diesem Repository
-├── 00-overview/            # Gesamtüberblick über das HomeLab, Topologie, Zielsetzung.
-├── 01-architecture/        # Grundlegende Designentscheidungen und Begründungen.
-├── 02-services/            # Dokumentation einzelner Systeme (z. B. MikroTik, FRITZ!Box, VPN).
-├── 03-operations/          # Betriebsrelevante Themen wie Monitoring, Updates, Backups.
-├── 04-incidents/           # Konkrete Vorfälle mit Root-Cause-Analyse
-└── 05-troubleshooting/     # Allgemeine Debugging-Methoden und systematische Analyseansätze.
-│   ├── README.md              # Einführung & Übersicht
-│   ├── mikrotik-vpn.md        # MikroTik VPN: Einrichtung & Grundkonfiguration
-│   ├── firewall-rules.md      # Sicherheitsmaßnahmen & Firewall-Regeln
-│   ├── network-segmentation.md # VLANs & Netzwerktrennung
-│   ├── configuration.md       # Detaillierte MikroTik-Befehle zur VPN-Konfiguration
-│   ├── external-access.md     # Anleitung für VPN-Nutzer (SmartDNS, WireGuard-Client)
-│   ├── troubleshooting.md     # Häufige Probleme & Lösungen
-│   ├── security.md            # Best Practices zur Absicherung (DNS-Leaks, Firewall)
-│   ├── changelog.md           # Änderungen & Updates an der Konfiguration (Optional)
-├── templates/                  
-│   ├── mikrotik-config.rsc     # Beispiel-Konfigurationsskript für MikroTik
-│   ├── vpn-setup-guide.md      # Schritt-für-Schritt-Anleitung
-├── scripts/                    # Automatisierung & Skripte
-│   ├── auto-vpn-reconnect.rsc  # MikroTik-Skript für automatische VPN-Neuverbindung
-│   ├── firewall-setup.rsc      # Automatisches Setup von Firewall-Regeln
-├── images/                     # Netzwerkdiagramme & Screenshots
-│   ├── vpn-topology.png        # Schema der VPN-Verbindung
-│   ├── firewall-rules-diagram.png # Visualisierung der Firewall-Regeln
-└── README.md                   # Haupt-README des Repos
+docs/
+├── 00-overview/        → Gesamtüberblick & Topologie
+├── 01-architecture/    → Designentscheidungen & Begründungen
+├── 02-services/        → Service-Dokumentation (z. B. VPN)
+├── 03-operations/      → Betriebsstrategien (Monitoring, Updates, Backups)
+├── 04-incidents/       → Konkrete Vorfälle mit Root-Cause-Analyse
+└── 05-troubleshooting/ → Allgemeine Debugging-Methoden
 ```
 
-### 🔹 **Router & Netzwerk-Setup**
+Die Struktur ist bewusst so gewählt, dass ich auch Monate später noch nachvollziehen kann:
 
-- **[MikroTik VPN](docs/mikrotik-vpn.md)**: VPN zum Streamen einrichten
+* Warum habe ich das so gebaut?
+* Was läuft wo?
+* Was ist wann kaputtgegangen?
+* Wie habe ich es analysiert?
+  
+## 🔍 Incident-Dokumentation
 
-  - [Detaillierte Konfiguration](docs/configuration.md)
-  - [Externer Zugriff](docs/external-access.md)
-  - [Troubleshooting](docs/troubleshooting.md)
-  - [Security Best Practices](docs/security.md)
+Jeder relevante Vorfall wird strukturiert dokumentiert – inklusive Denkweg.
 
-- **[Firewall-Regeln](docs/firewall-rules.md)**: Sicherheitsregeln & Schutzmaßnahmen
+Typische Struktur:
 
-- **[Fritzbox Bridge Mode](docs/fritzbox-bridge.md)**: Nutzung der Fritzbox als Modem
+* TL;DR
+* Kontext
+* Symptome
+* Hypothesen
+* Untersuchung (Layer 2 → 3 → 7)
+* Technische Artefakte (CLI-Output, Logs)
+* Root Cause
+* Lessons Learned
+* Präventive Maßnahmen
 
-- **[Netzwerk-Segmentierung](docs/network-segmentation.md)**: VLANs & Subnetting
+Mir geht es dabei nicht nur um „Fixen“, sondern um Verständnis.
 
-- **[Externer Zugriff](docs/external-access.md)**: VPN-Nutzung auf verschiedenen Geräten
+Beispiele:
 
-- **[Absicherung & Security](docs/security.md)**: Best Practices für eine sichere Konfiguration
-
-### 🚧 **In Arbeit / Geplante Inhalte**
-
-- **Optimierung der Netzwerk-Performance**
-- **DNS- & DHCP-Server auf MikroTik**
-- **Dynamische Routen & Load Balancing**
-- **Erweiterte Firewall-Filter & Portweiterleitungen**
-
----
-
-## 🖥 Technische Ausstattung
-
-Dieses Repository basiert auf folgendem Setup:
-
-- **Haupt-Router**: FritzBox 7530 (mit Internetzugang, DHCP-Server)
-- **Sekundär-Router**: MikroTik hAP ax³ (per LAN verbunden, für VPN & Netzwerksteuerung)
-- **VPN-Dienst**: WireGuard
-- **Betriebssysteme**: Ubuntu 24.04 LTS, Windows, macOS
-- **Netzwerktopologie**: /
-
-Falls du ein anderes Setup verwendest, können einige Konfigurationsschritte abweichen.
+* FRITZ!Box Boot-Hang nach Firmware-Update
+* MikroTik VPN Implementierungsproblem (Konzeptfehler)
 
 ---
 
-## 📝 Warum dieses Repository?
+## 🧱 Architektur – Überblick
 
-Ich nutze GitHub primär als **persönliches Dokumentations- und Wissensmanagement-Tool**. Dieses Repository hilft mir dabei, …
+Aktuelle High-Level-Architektur:
 
-- meine **Netzwerk- & Router-Konfigurationen** zu dokumentieren
-- anderen (auch ohne tiefes technisches Wissen) Lösungen für ähnliche Probleme bereitzustellen
-- meine **Erfahrungen als zukünftiger Systemadministrator** sichtbar zu machen
+Client → MikroTik (Routing, DNS, VPN, Firewall) → FRITZ!Box (WAN-Gateway) → ISP
 
-Falls du Fragen hast oder Feedback geben möchtest, freue ich mich über deine Nachricht! 😊
+Der MikroTik ist die zentrale Routing- und Sicherheitsinstanz. Die FRITZ!Box übernimmt primär die WAN-Anbindung. Alle Clients befinden sich vollständig hinter dem MikroTik.
+
+Detaillierte Diagramme:
+
+* [Netzwerk-Topologie, Trennung zwischen Data-Plane und Control-Plane dokumentiert](docs/00-overview/network-topology.md)
+
+---
+
+## 📌 Warum dieses Repository existiert
+
+Dieses Repository dokumentiert meine HomeLab-Netzwerk-Umgebung und dient gleichzeitig als persönliches Netzwerk- & Infrastruktur-Portfolio.
+
+Ich nutze dieses Projekt, um:
+
+* reale Netzwerkarchitekturen aufzubauen
+* Routing-, Firewall- und VPN-Konzepte praktisch umzusetzen
+* Probleme systematisch zu analysieren
+* Incident-Dokumentation strukturiert zu betreiben
+* meine Entwicklung im Bereich Linux- & Netzwerkadministration nachvollziehbar festzuhalten
+
+Es ist bewusst mehr als eine Sammlung von Konfigurationsnotizen – es ist mein technisches Logbuch.
 
 ---
 
-## 🚀 Verwendung
+## 🛠 Services & Systeme
 
-Hier findest du alle wichtigen Informationen zur Nutzung dieses Repositories.
+Dokumentierte Komponenten u. a.:
 
-- **Installation & Einrichtung**: Lies die [MikroTik VPN-Anleitung](docs/mikrotik-vpn.md) für erste Schritte.
-- **Netzwerk-Segmentierung**: Mehr zur Trennung von Netzwerken findest du in [network-segmentation.md](docs/network-segmentation.md).
-- **Firewall & Sicherheit**: Schutzmaßnahmen in [firewall-rules.md](docs/firewall-rules.md).
+* MikroTik (Routing, DNS, VPN, Firewall)
+* FRITZ!Box als WAN-Gateway
+* Docker-Host (HP EliteDesk 800 G5 Mini)
+* Self-Hosted Services (z. B. Ollama, NetBox, Portainer, NPM, paperless-ngx)
 
-## 🤝 Mitwirken
+Zu jedem Service dokumentiere ich:
 
-Falls du Änderungen oder Verbesserungen beisteuern möchtest, lies die [CONTRIBUTING.md](CONTRIBUTING.md).
+* Zielsetzung
+* Architektur
+* Sicherheitsüberlegungen
+* Typische Fehlerquellen
+* Wartungshinweise
 
-## 🔗 Weiterführende Informationen
+## 🧠 Betriebsprinzipien
 
-- [MikroTik Dokumentation](https://wiki.mikrotik.com)
-- [OpenVPN Offizielle Seite](https://openvpn.net)
-- [Projekt-Template](https://github.com/steviexo/project-template)
+* Änderungen werden nicht nur durchgeführt, sondern dokumentiert.
+* Probleme werden schichtbasiert analysiert (OSI-Denken).
+* Architekturentscheidungen werden begründet.
+* Sensible Daten werden nicht veröffentlicht.
+* Fehler sind Lernmaterial – nicht nur Störungen.
 
 ---
+## 🚀 Einstieg für Leser
+
+Empfohlene Reihenfolge:
+
+1. [HomeLab-Überblick](docs/00-overview/homelab-overview.md`)
+2. [Netzwerk-Topologie](docs/00-overview/network-topology.md)
+3. [Ein Incident aus](docs/04-incidents/)
+
+So bekommt man sowohl die Architektur als auch meinen Denkansatz beim Troubleshooting mit.
+
+---
+## 📈 Weiterentwicklung
+
+Geplante nächste Schritte:
+
+* Monitoring (Gateway-Checks, Service-Verfügbarkeit)
+* Weitere Netzsegmentierung (VLANs)
+* Mehr Automatisierung
+* Ausbau der Sicherheitsmechanismen
+
+Dieses Repository begleitet meinen Weg in Richtung professioneller Linux- und Netzwerkadministration – mit realer Infrastruktur, echten Problemen und dokumentierten Lösungen.
