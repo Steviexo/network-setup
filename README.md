@@ -51,8 +51,8 @@ Mir geht es dabei nicht nur um „Fixen“, sondern um Verständnis.
 
 Beispiele:
 
-* FRITZ!Box Boot-Hang nach Firmware-Update
-* MikroTik VPN Implementierungsproblem (Konzeptfehler)
+* [FRITZ!Box Boot-Hang nach Firmware-Update](docs/04-incidents/2026-02-fritzbox-boot-hang.md)
+* [MikroTik VPN Implementierungsproblem (Konzeptfehler)](docs/04-incidents/2025-05-mikrotik-vpn-implementation)
 
 ---
 
