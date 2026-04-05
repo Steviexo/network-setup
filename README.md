@@ -53,6 +53,7 @@ Beispiele:
 
 * [FRITZ!Box Boot-Hang nach Firmware-Update](docs/04-incidents/2026-02-fritzbox-boot-hang.md)
 * [MikroTik VPN Implementierungsproblem (Konzeptfehler)](docs/04-incidents/2025-05-mikrotik-vpn-implementation)
+* [NPM Internes DNS Problem](docs/04-incidents/npm-internal-dns.md)
 
 ---
 
