@@ -288,5 +288,6 @@ Die konkrete technische Umsetzung kann später auf einen anderen internen DNS-Se
 ## Verwandte Dokumente
 
 * [Incident-Dokumentation zur Störung der internen Erreichbarkeit von NPM-Domains](docs/04-incidents/npm-internal-dns.md)
-* Troubleshooting-Dokumentation für DNS-/Reverse-Proxy-Probleme
-* Topologie- und Architekturübersicht des Heimnetzes
+* [Troubleshooting-Dokumentation für DNS-/Reverse-Proxy-Probleme](docs/05-troubleshooting/internal-reverse-proxy-domains.md)
+* [Topologie- und Betriebsdokumentation des Heimnetzes](docs/overview)
+ 
