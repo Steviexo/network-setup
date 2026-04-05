@@ -401,6 +401,6 @@ Wenn diese vier Punkte sauber beantwortet werden, spart das später viel Fehlers
 
 ## Verwandte Dokumente
 
-* Architekturentscheidung für Split-DNS via MikroTik statt Hairpin NAT
-* Incident-Dokumentation zur internen Nichterreichbarkeit von NPM-Domains
-* Topologie- und Betriebsdokumentation des Heimnetzes
+* [Architekturentscheidung für Split-DNS via MikroTik statt Hairpin NAT](docs/01-architecture/internal-split-dns-via-mikrotik.md)
+* [Incident-Dokumentation zur internen Nichterreichbarkeit von NPM-Domains](docs/04-incidents/npm-internal-dns.md)
+* [Topologie- und Betriebsdokumentation des Heimnetzes](docs/overview)
