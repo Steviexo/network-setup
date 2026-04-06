@@ -1,0 +1,315 @@
+# Incident: Externe Erreichbarkeit veröffentlichter Dienste gestört
+
+> Hinweis: Diese Fassung ist für ein öffentlich einsehbares Repository bewusst leicht anonymisiert. Konkrete öffentliche Domains, DynDNS-Ziele, ungewöhnliche externe Test-Ports und unnötig präzise Veröffentlichungsdetails wurden abstrahiert oder entfernt.
+
+## Einordnung
+
+* **Kategorie:** Incident
+* **Ablage im Repository:** `04-incidents/`
+* **Betroffene Komponenten:** FRITZ!Box, MikroTik, Reverse Proxy, Docker-Host, veröffentlichte Dienste
+* **Betroffene Dienste (beispielhaft):** Medienserver, Dokumentenmanagement, Barcode-/Inventarisierungsdienst, Home-Automation, weitere intern betriebene Webdienste
+
+---
+
+## Kurzfassung
+
+Mehrere veröffentlichte Dienste waren extern plötzlich nicht mehr erreichbar. Im Browser traten Verbindungsabbrüche und fehlgeschlagene externe Tunnel-/HTTPS-Verbindungen auf.
+
+Die Analyse zeigte, dass weder die betroffenen Docker-Container noch der Reverse Proxy selbst die eigentliche Ursache waren. Lokale Tests auf dem Docker-Host bestätigten, dass die Dienste intern korrekt antworteten und der Reverse Proxy die konfigurierten Proxy-Hosts lokal sauber bedienen konnte.
+
+Die Störung lag letztlich **vor** dem Reverse Proxy, also in der Kette **Internet → FRITZ!Box → MikroTik → Docker-Host**. Durch mehrere Gegenproben mit NAT-Countern, Sniffer-Tests und einem zusätzlichen Test-Port konnte eingegrenzt werden, dass die FRITZ!Box eingehende Verbindungen aus dem Internet praktisch nicht zuverlässig an den MikroTik weiterreichte – obwohl die Portfreigaben in der GUI korrekt aussahen.
+
+Daraus entstand die Architekturentscheidung, die FRITZ!Box künftig nicht mehr als kritische Routing-/NAT-Instanz vor dem MikroTik zu belassen, sondern mittelfristig den **MikroTik als Primärrouter** einzuplanen.
+
+---
+
+## Ausgangslage
+
+Das Heimnetz war zum Zeitpunkt des Incidents wie folgt aufgebaut:
+
+* **Internetanschluss:** Telekom DSL
+* **FRITZ!Box:** direkt am DSL-Anschluss, bisher Primärrouter
+* **MikroTik:** hinter der FRITZ!Box
+* **Docker-Host:** im MikroTik-LAN
+* **Reverse Proxy:** im Docker-Container
+* **DNS / externe Veröffentlichung:** Subdomains per CNAME auf ein DynDNS-Ziel des MikroTik
+
+Bereits bekannte Randbedingungen:
+
+* der Reverse Proxy lauschte lokal auf den erwarteten Standardports
+* einzelne Services waren intern weiterhin erreichbar
+* nur ein Teil des Heimnetzes hing bereits hinter dem MikroTik
+
+---
+
+## Symptome
+
+Beobachtete Symptome:
+
+* einzelne veröffentlichte Subdomains extern nicht erreichbar
+* Browserfehler wie Verbindungsabbrüche und fehlgeschlagene externe Tunnel-/HTTPS-Verbindungen
+* Mobilfunk-Test zeigte dieselbe Störung wie der Zugriff aus dem Heimnetz
+* mobile Apps für intern betriebene Dienste konnten extern keine Verbindung mehr herstellen
+* Zertifikatserneuerungen im Reverse Proxy schlugen teilweise fehl
+
+Wichtig:
+
+* nicht alle Dienste waren in jeder Testphase gleichermaßen auffällig
+* die Störung wirkte zunächst wie ein Docker-/Proxy-Problem, lag aber nicht dort
+
+---
+
+## Analyse und Eingrenzung
+
+### 1. Docker-Container geprüft
+
+Die betroffenen Container liefen stabil und befanden sich nicht in Restart-Schleifen.
+
+Beobachtungen:
+
+* ein Medienserver antwortete lokal auf seinem bekannten Dienstport
+* ein Dokumentenmanagement-System antwortete lokal auf seinem Webport
+* ein weiterer Webdienst antwortete lokal ebenfalls erwartungsgemäß
+
+Zwischenergebnis:
+
+* **die Container selbst waren nicht die Hauptursache**
+
+---
+
+### 2. Lokale Erreichbarkeit auf dem Docker-Host geprüft
+
+Vom Docker-Host aus wurden lokale HTTP-Tests gegen die relevanten Ports durchgeführt.
+
+Beispielhafte Ergebnisse:
+
+* lokale Loopback-Tests gegen die betroffenen Dienstports lieferten Antworten
+* der Reverse Proxy antwortete lokal auf dem Webport
+
+Zwischenergebnis:
+
+* **die Anwendungen antworteten lokal korrekt**
+* **der Reverse Proxy lief grundsätzlich**
+
+---
+
+### 3. Reverse-Proxy-internes Routing geprüft
+
+Es wurde getestet, ob der Reverse Proxy die Zielcontainer direkt bzw. indirekt erreichen kann.
+
+Erkenntnisse:
+
+* mehrere betroffene Dienste waren aus Sicht des Reverse Proxy intern erreichbar
+* ein Dienst war nicht per Containername, aber über den Host-Pfad erreichbar
+
+Zusätzlicher Test auf dem Docker-Host:
+
+* lokaler HTTPS-Test mit Host-Header-Auflösung direkt gegen den Reverse Proxy
+* der Reverse Proxy lieferte dabei saubere Antworten für betroffene Hosts
+
+Zwischenergebnis:
+
+* **der Reverse Proxy funktionierte intern korrekt**
+* **die Proxy-Hosts waren lokal funktionsfähig**
+* **das Problem lag nicht primär im Reverse Proxy**
+
+---
+
+### 4. Zertifikate geprüft
+
+Die Zertifikate für betroffene Hosts wurden lokal geprüft.
+
+Erkenntnisse:
+
+* die lokal ausgelieferten Zertifikate mehrerer betroffener Hosts waren gültig
+* die Laufzeiten waren nicht abgelaufen
+* dennoch schlugen einige Zertifikatserneuerungen fehl
+
+Bewertung:
+
+* Zertifikatsfehler waren **nicht die Kernursache** der Nichterreichbarkeit
+* die fehlgeschlagenen Erneuerungen waren eher ein **Folgesymptom** der gestörten externen Erreichbarkeit
+
+---
+
+### 5. DNS / IPv4 / IPv6 geprüft
+
+Die betroffenen Subdomains lieferten sowohl IPv4- als auch IPv6-Antworten.
+
+Daraufhin wurde getestet:
+
+* IPv6-Freigaben auf der FRITZ!Box testweise deaktiviert
+* Mobilfunk-Zugriff erneut geprüft
+
+Ergebnis:
+
+* keine Verbesserung
+
+Zwischenergebnis:
+
+* **IPv6 war nicht die alleinige Ursache**
+* die Hauptstörung blieb auf der externen Weiterleitung bestehen
+
+---
+
+### 6. MikroTik NAT-Counter geprüft
+
+Auf dem MikroTik wurden die `dstnat`-Regeln für die Weiterleitung auf den Reverse Proxy geprüft.
+
+Relevante Regeln:
+
+* Weiterleitungen der Standard-Webports auf den internen Reverse Proxy
+
+Test:
+
+* Counter zurückgesetzt
+* externer Aufruf per Mobilfunk ausgelöst
+* Counter erneut geprüft
+
+Ergebnis:
+
+* die Counter der erwarteten Regeln stiegen **nicht** an
+
+Zwischenergebnis:
+
+* **die erwarteten eingehenden Verbindungen trafen die MikroTik-dstnat-Regeln nicht**
+
+---
+
+### 7. Zusätzlicher Test-Port eingerichtet
+
+Um auszuschließen, dass nur die Standard-Webports betroffen sind, wurde testweise ein zusätzlicher externer Port eingerichtet.
+
+Temporäre Maßnahmen:
+
+* zusätzliche `dstnat`-Regel auf dem MikroTik
+* zusätzliche Freigabe auf der FRITZ!Box
+* externer Test direkt gegen die öffentliche IPv4-Adresse
+
+Ergebnis:
+
+* keine Reverse-Proxy-Logs
+* keine Paketzähler auf der MikroTik-Testregel
+
+Zwischenergebnis:
+
+* **nicht nur die Standard-Webports, sondern auch ein frischer Test-Port kam praktisch nicht am MikroTik an**
+
+---
+
+### 8. Sniffer-Test auf dem MikroTik
+
+Zusätzliche Paketmitschnitte auf dem WAN-Interface wurden durchgeführt.
+
+Erkenntnis:
+
+* sichtbar war primär Rückverkehr bestehender ausgehender HTTPS-Verbindungen
+* nicht jedoch der erwartete eingehende Veröffentlichungsverkehr auf dem veröffentlichten HTTPS-Port
+
+Bewertung:
+
+* bestätigte die Annahme, dass die gewünschten eingehenden Verbindungen **nicht zuverlässig an der richtigen Stelle ankamen**
+
+---
+
+## Root-Cause-Bewertung
+
+Die Analyse ergab mit hoher Wahrscheinlichkeit:
+
+> Die FRITZ!Box war in der aktuellen Kette als Portweiterleitungs-Instanz nicht mehr verlässlich. Die GUI zeigte zwar korrekt aussehende Portfreigaben, praktisch wurden eingehende Verbindungen aus dem Internet jedoch nicht zuverlässig an den MikroTik weitergereicht.
+
+### Was ausgeschlossen wurde
+
+* Docker-Container als Hauptursache
+* Reverse Proxy als Hauptursache
+* lokale Erreichbarkeit der Dienste
+* abgelaufene Zertifikate als Primärursache
+* reines IPv6-Problem als alleinige Erklärung
+
+### Wahrscheinlichste eigentliche Ursache
+
+* **unzuverlässige oder faktisch wirkungslose Portweiterleitung in der FRITZ!Box**
+* begünstigt durch die Architektur **FRITZ!Box vor MikroTik**
+
+---
+
+## Sofortmaßnahmen
+
+Durchgeführt wurden unter anderem:
+
+* lokale Funktionsprüfung der Dienste auf dem Docker-Host
+* lokale HTTPS-Tests gegen den Reverse Proxy mit Host-Header-Auflösung
+* Prüfung und Rücksetzen von NAT-Countern auf dem MikroTik
+* temporäre Testregeln und zusätzlicher Test-Port
+* Deaktivierung von IPv6-Freigaben zum Gegencheck
+* Neustart der FRITZ!Box
+* erneute Anlage bzw. Prüfung von Freigaben
+
+Ergebnis:
+
+* **keine nachhaltige Wiederherstellung** der externen Erreichbarkeit über die bestehende Kette
+
+---
+
+## Architektur-Folgeentscheidung
+
+Aus dem Incident wurde folgende Entscheidung abgeleitet:
+
+### Zielrichtung
+
+Der **MikroTik soll mittelfristig Primärrouter werden**. Die FRITZ!Box soll künftig möglichst nicht mehr als kritische Routing-/NAT-Instanz vor dem MikroTik verbleiben.
+
+### Begründung
+
+Die bestehende Architektur erzeugt unnötige Komplexität und Fehlerszenarien:
+
+* doppelte Router-Kette
+* doppelte NAT-/Weiterleitungslogik
+* schwierige Fehlersuche
+* intransparente Interaktion zwischen FRITZ!Box, MikroTik und veröffentlichten Diensten
+
+### Geplante Zielarchitektur
+
+Langfristig:
+
+* MikroTik als zentrale Routing- und NAT-Instanz
+* FRITZ!Box nur noch, falls nötig, in reduzierter Rolle
+
+  * z. B. für WLAN/IoT oder andere Restaufgaben
+
+---
+
+## Lessons Learned
+
+* Eine formal korrekt aussehende Portfreigabe in der Router-GUI ist **kein Beweis**, dass der Traffic praktisch korrekt weitergeleitet wird.
+* Lokale HTTPS-Tests mit erzwungener Host-Auflösung gegen den Reverse Proxy sind sehr hilfreich, um Reverse Proxy und Backend frühzeitig zu entlasten.
+* NAT-Counter und gezielte Test-Ports auf dem MikroTik sind gute Werkzeuge, um zwischen Docker-/Proxy-Problemen und vorgelagerten Routing-Problemen zu unterscheiden.
+* Die Architektur **FRITZ!Box vor MikroTik** erhöht die Komplexität unnötig und erschwert die Fehlersuche erheblich.
+* Ein sauber dokumentierter Incident spart später viel Zeit, weil bekannte Sackgassen nicht erneut abgearbeitet werden müssen.
+
+---
+
+## Offene Folgearbeiten
+
+* Bestandsaufnahme der aktuellen Netzarchitektur für den geplanten Umbau
+* Planung einer Zielarchitektur mit MikroTik als Primärrouter
+* Definition eines Rückfallplans für die Migration
+* spätere separate Architektur-Dokumentation im Repository unter `01-architecture/`
+
+---
+
+## Status
+
+* **Incident analysiert:** ja
+* **Ursache technisch eingegrenzt:** weitgehend ja
+* **vollständig behoben:** nein
+* **strategische Folgeentscheidung getroffen:** ja
+
+---
+
+## Verweise
+
+Empfohlene ergänzende Dokumentation nach Abschluss des Umbaus:
+
+* `01-architecture/` → neue Zielarchitektur mit MikroTik als Primärrouter
+* `05-troubleshooting/` → allgemeines Vorgehen zur Eingrenzung externer Erreichbarkeitsprobleme bei Reverse-Proxy-Setups
